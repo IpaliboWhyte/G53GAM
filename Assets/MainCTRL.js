@@ -35,12 +35,12 @@ function Update () {
 
 function increaseLevel(){
 	while (true){
-		if(portal.speed > 1){
+		if(portal.speed > 0.5){
 			level++;
 			portal.speed -= levelMultiplier;
 			
 		}
 		
-		yield WaitForSeconds(20);
+		yield WaitForSeconds(40);
 	}
 }

@@ -18,6 +18,9 @@ function spawn (position, speed) {
 }
 
 function popBubble(x, y){
+	audio.volume = 0.5;
+	audio.Play();
+	isSaved = true;
 	sprite.sprite = Sprite_fish;
 	directionX = x;
 	directionY = y;
@@ -29,11 +32,7 @@ function Start () {
 
 function Update () {
 
-	if(!isSaved){
 	transform.Translate(Vector2(directionX * speed * Time.smoothDeltaTime, directionY * speed * Time.smoothDeltaTime));
-	}else{
-	
-	}
 	
 	if(transform.position.y > 6.065119 || transform.position.x > 9){
 
@@ -44,9 +43,9 @@ function Update () {
 }
 
 function OnCollisionEnter2D(coll: Collision2D) {
-
+	
 	if(coll.gameObject.tag == 'Player'){	
-		popBubble(Random.Range(0.5,1.5),Random.Range(-1.5,1.5));
+		popBubble(Random.Range(2.5,4.5),Random.Range(-2.5,2.5));
 	}
 	
 }

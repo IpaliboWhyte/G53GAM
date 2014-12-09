@@ -10,7 +10,9 @@ var shouldSpawn = false;
 var count : int = 0;
 
 var portal : GameObject;
+
 var speed : float = 6;
+
 
 function spawnEnemy () {
 	
@@ -62,28 +64,28 @@ function spawnEnemy () {
 }
 
 function spawnEater (position) {
-	
+	audio.Play();
 	var temp = Instantiate(Eater_Enemy, position, transform.rotation);
 	temp.speed = Random.Range(1, 3);
 
 }
 
 function spawnDelay (position) {
-	
+	audio.Play();
 	var temp = Instantiate(Delay_Enemy, position, transform.rotation);
 	temp.speed = Random.Range(1, 3);
 
 }
 
 function spawnPoint (position) {
-	
+	audio.Play();
 	var temp = Instantiate(Perk_Point, position, transform.rotation);
 	temp.speed = Random.Range(1, 3);
 
 }
 
 function spawnLife (position) {
-	
+	audio.Play();
 	var temp = Instantiate(Perk_Life, position, transform.rotation);
 	temp.speed = Random.Range(1, 7);
 
@@ -102,6 +104,7 @@ function spawnPortal () {
 
 function Start () {
 	spawnEnemy();
+	audio.volume = 0.3;
 }
 
 function Update () {
