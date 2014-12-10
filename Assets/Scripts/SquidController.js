@@ -19,6 +19,7 @@ var swoosh : AudioClip;
 var powerDown_Delay : AudioClip;
 var powerDown_Eater : AudioClip;
 var eFX_CountDown   : AudioClip;
+var life_exuasted   : AudioClip;
 
 var hudFont : Font;
 
@@ -38,7 +39,6 @@ var level     : int = 0;
 public var gameover : boolean = false;
 
 function Start () {
-	//player.rigidbody2D.gravityScale = 0;
 	sprite = GetComponent(SpriteRenderer);
 	resetTimer (TIMEDEFAULT);
 	audio.volume = 0.2;
@@ -104,7 +104,7 @@ function Update () {
 		speed = DEFAULTSPEED;
 	}
 
-	if (timer == 0) {
+	if (timer == 0 && !gameover) {
 		stopGame();
 	}
 	
@@ -117,11 +117,11 @@ function Update () {
 		hud_Timer.guiText.fontSize = 25;
 	}
 	
-	if(Input.GetAxis("Horizontal")){
+	if(Input.GetAxis("Horizontal") && !gameover){
 		transform.Translate(Vector2(Input.GetAxis("Horizontal") *speed * Time.smoothDeltaTime, 0));	
 	}
 	
-	if(Input.GetAxis("Vertical")){
+	if(Input.GetAxis("Vertical") && !gameover){
 		transform.Translate(Vector2(0, Input.GetAxis("Vertical") *(speed-1) * Time.smoothDeltaTime));	
 	}
 	
@@ -137,7 +137,7 @@ function Update () {
 		transform.position.y = -2.5;
 	}
 	
-	if(transform.position.x > 7.1){
+	if(transform.position.x > 7.1 && !gameover){
 		transform.position.x = 7.1;
 	}
 	
@@ -146,21 +146,25 @@ function Update () {
 		transform.Translate(Vector2(0, 0.3 * Time.deltaTime));
 	}else{
 		//Debug.Log('Move Down');
-		transform.Translate(Vector2(0, -0.3 * Time.deltaTime));
+		//transform.Translate(Vector2(0, -0.3 * Time.deltaTime));
 	}
 	
-    if (Input.GetKey('left')) // If the space bar is pushed down
+    if (Input.GetKey('left') && !gameover)
      {
 		sprite.sprite = Player1Inv;	
-     }else if((Input.GetKey('right'))){
+     }else if((Input.GetKey('right')) && !gameover){
      	sprite.sprite = Player1;	
      }
      
-     if( Input.GetKeyDown('left')){
+     if( Input.GetKeyDown('left') && !gameover ){
      	audio.PlayOneShot(swoosh, 0.7);
-     }else if(Input.GetKeyDown('right')){
+     }else if(Input.GetKeyDown('right') && !gameover){
      	audio.PlayOneShot(swoosh, 0.5);
      }   
+     
+     if(gameover){
+		transform.Translate(Vector2(1 *speed * Time.smoothDeltaTime, 0));
+     }
 	
 }
 
@@ -170,7 +174,7 @@ function OnCollisionEnter2D(coll: Collision2D) {
 		Destroy (coll.gameObject);
 		if(lives > 0){
 			lives--;
-		}else{
+		}else if(lives == 0 && !gameover){
 			stopGame();
 		}
 		
@@ -202,9 +206,14 @@ function OnCollisionEnter2D(coll: Collision2D) {
 }
 
 function stopGame(){
-	player.rigidbody2D.gravityScale = 1;
-	main.endGame(points);
+	sprite.sprite = Player1;
+	timer_reset_value = 0;
+	audio.PlayOneShot(life_exuasted);
 	gameover = true;
-	//main.endGame(points);
-	//gameObject.SendMessage("endGame", points);
+	main.endGame(points);
+
+}
+
+function rotatePlayer(){
+	
 }

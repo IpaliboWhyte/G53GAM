@@ -10,7 +10,9 @@ var hud_Level : GameObject;
 
 var bgOverlay : Texture;
 
-var btnTexture : Texture;
+var btnMenuTexture : Texture;
+
+var btnReplayTexture : Texture;
 
 var hudFont : Font;
 
@@ -25,6 +27,8 @@ private var sceneStarting : boolean = true;     // Whether or not the scene is s
 var overLayStyle : GUIStyle;
 
 var myStyle : GUIStyle;
+
+var myStyleSub : GUIStyle;
 
 var isGameOver : boolean = false;
 
@@ -56,6 +60,10 @@ function Start () {
 	myStyle.fontSize = 70;
 	myStyle.normal.textColor = Color.white;
 	
+	myStyleSub.font = hudFont;
+	myStyleSub.fontSize = 40;
+	myStyleSub.normal.textColor = Color.white;
+	
 	Time.timeScale = 1;
 	
 }
@@ -72,9 +80,9 @@ function Update () {
         StartScene();
     }
         	
-     if(Input.GetKeyDown('space') && !paused ){
+     if(Input.GetKeyDown('space') && !paused && !isGameOver){
      	pauseGamePlay();
-     }else if(Input.GetKeyDown('space') && paused){
+     }else if(Input.GetKeyDown('space') && paused && !isGameOver){
      	resumeGamePlay();
      }
 }
@@ -156,7 +164,7 @@ public function EndScene ()
 
 function OnGUI() {
 	// Show a message if the game is paused.
-	if (paused) {
+	if (paused && !isGameOver) {
 						
 		GUI.contentColor = Color.white;
 		 		 
@@ -169,7 +177,7 @@ function OnGUI() {
 	 	GUI.color = Color.white;
 	 	
 	 		 	
-	 	if(GUI.Button(Rect(Screen.width-180,100,100,30),btnTexture, GUIStyle.none)){
+	 	if(GUI.Button(Rect(Screen.width-180,100,100,30),btnMenuTexture, GUIStyle.none)){
 			Application.LoadLevel(0);
 	 	}
 		
@@ -189,22 +197,29 @@ function OnGUI() {
 	 	GUI.color.a = 1;
 	 	
 	 	GUI.color = Color.white;
-	 	
-	 		 	
-	 	if(GUI.Button(Rect(Screen.width-180,100,100,30),btnTexture, GUIStyle.none)){
+	 	 		 	
+	 	if(GUI.Button(Rect(Screen.width-180,100,100,30),btnMenuTexture, GUIStyle.none)){
 			Application.LoadLevel(0);
 	 	}
 		
 		
-	 	GUI.Label(Rect(Screen.width/2 - 150 ,270, 200,50),"Game Over :( ", myStyle);
-	 	GUI.Label(Rect(Screen.width/2 - 100 ,360, 200,50),"You rescued "+playerScore+" Gold fishes !");
+	 	GUI.Label(Rect(Screen.width/2 - 220 ,270, 200,50),"Game Over :( ", myStyle);
+	 	GUI.Label(Rect(Screen.width/2 - 100 ,360, 200,50),playerScore+" rescues ", myStyleSub);
+	 	
+	 	if(GUI.Button(Rect(Screen.width/2 - 100,450,200,50),btnReplayTexture, GUIStyle.none)){
+			Application.LoadLevel(1);
+	 	}
 
 		}
+		
 	
 }
 
 function endGame (score : int){
-
+	audio.Pause();
+	yield WaitForSeconds (3);
+	audio.Play();
+	
 	playerScore = score;
 	isGameOver = true;
 	
