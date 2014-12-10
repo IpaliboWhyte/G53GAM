@@ -11,7 +11,7 @@ var count : int = 0;
 
 var portal : GameObject;
 
-var speed : float = 6;
+var speed : float = 5;
 
 
 function spawnEnemy () {

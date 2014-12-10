@@ -1,5 +1,7 @@
 ﻿#pragma strict
 
+var main : MainCTRL;
+
 var POINTMULTIPLIER = 1;
 var DEFAULTSPEED = 5;
 var MAXLIVES = 3;
@@ -13,6 +15,7 @@ var hud_Life : GameObject;
 var hud_Timer : GameObject;
 
 var powerUp_Life : AudioClip;
+var swoosh : AudioClip;
 var powerDown_Delay : AudioClip;
 var powerDown_Eater : AudioClip;
 var eFX_CountDown   : AudioClip;
@@ -22,7 +25,9 @@ var hudFont : Font;
 var sprite 	  : SpriteRenderer;
 
 var lives 	  : int = 3;
+
 var points    : int = 0;
+
 var speed     : int = DEFAULTSPEED;
 var timer_Delay : int = 0;
 var timer 	  : int = 0;
@@ -30,10 +35,17 @@ var timer_reset_value : int = 0;
 
 var level     : int = 0;
 
+public var gameover : boolean = false;
+
 function Start () {
+	//player.rigidbody2D.gravityScale = 0;
 	sprite = GetComponent(SpriteRenderer);
 	resetTimer (TIMEDEFAULT);
 	audio.volume = 0.2;
+	
+	
+	main = GameObject.Find("background_only").gameObject.GetComponent(MainCTRL);
+	
 }
 
 function resetTimer (time: int){
@@ -91,6 +103,10 @@ function Update () {
 	}else if (timer_Delay <= 0){
 		speed = DEFAULTSPEED;
 	}
+
+	if (timer == 0) {
+		stopGame();
+	}
 	
 	if(timer < 5){
 		
@@ -117,7 +133,7 @@ function Update () {
 		transform.position.x = -7.1;
 	}
 	
-	if(transform.position.y < -2.5){
+	if(transform.position.y < -2.5 && !gameover){
 		transform.position.y = -2.5;
 	}
 	
@@ -139,6 +155,12 @@ function Update () {
      }else if((Input.GetKey('right'))){
      	sprite.sprite = Player1;	
      }
+     
+     if( Input.GetKeyDown('left')){
+     	audio.PlayOneShot(swoosh, 0.7);
+     }else if(Input.GetKeyDown('right')){
+     	audio.PlayOneShot(swoosh, 0.5);
+     }   
 	
 }
 
@@ -148,21 +170,23 @@ function OnCollisionEnter2D(coll: Collision2D) {
 		Destroy (coll.gameObject);
 		if(lives > 0){
 			lives--;
+		}else{
+			stopGame();
 		}
 		
-	}else if(coll.gameObject.tag == 'Delay'){
+	}else if(coll.gameObject.tag == 'Delay' && !gameover){
 		audio.PlayOneShot(powerDown_Delay);
 		Destroy (coll.gameObject);
 		speedUp(10);
 		
-	}else if(coll.gameObject.tag == 'Point'){
+	}else if(coll.gameObject.tag == 'Point' && !gameover){
 		points += POINTMULTIPLIER;
 		timer_reset_value = TIMEDEFAULT;
 		if(timer <= 0){
 			resetTimer (TIMEDEFAULT);
 		}
 		
-	}else if(coll.gameObject.tag == 'Life'){
+	}else if(coll.gameObject.tag == 'Life' && !gameover){
 		audio.PlayOneShot(powerUp_Life);
 		if(lives < MAXLIVES){
 			lives++;
@@ -174,5 +198,13 @@ function OnCollisionEnter2D(coll: Collision2D) {
 	
 	}
 	
-		Debug.Log('You have '+lives+ 'lives left, Your saves are '+ points);
+		//Debug.Log('You have '+lives+ 'lives left, Your saves are '+ points);
+}
+
+function stopGame(){
+	player.rigidbody2D.gravityScale = 1;
+	main.endGame(points);
+	gameover = true;
+	//main.endGame(points);
+	//gameObject.SendMessage("endGame", points);
 }

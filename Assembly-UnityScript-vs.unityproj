@@ -52,6 +52,7 @@
      <Compile Include="Assets\GunCTRL.js" />
      <Compile Include="Assets\HudMyCTRL.js" />
      <Compile Include="Assets\MainCTRL.js" />
+     <Compile Include="Assets\MainMenuCTRL.js" />
      <Compile Include="Assets\PerkCTRL.js" />
      <Compile Include="Assets\PointCTRL.js" />
      <Compile Include="Assets\PortalController.js" />
