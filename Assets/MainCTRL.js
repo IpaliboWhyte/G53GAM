@@ -10,6 +10,8 @@ var hud_Level : GameObject;
 
 var hudFont : Font;
 
+var soundTrack: AudioClip;
+
 function spawnPortal() {
 
 	while(true) { 
@@ -20,6 +22,10 @@ function spawnPortal() {
 }
 
 function Start () {
+
+	audio.PlayOneShot(soundTrack);
+	audio.loop = true;
+	
 	player.spawn();
 	increaseLevel();
 	spawnPortal();
@@ -41,6 +47,6 @@ function increaseLevel(){
 			
 		}
 		
-		yield WaitForSeconds(40);
+		yield WaitForSeconds(20);
 	}
 }

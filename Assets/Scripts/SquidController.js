@@ -15,7 +15,7 @@ var hud_Timer : GameObject;
 var powerUp_Life : AudioClip;
 var powerDown_Delay : AudioClip;
 var powerDown_Eater : AudioClip;
-
+var eFX_CountDown   : AudioClip;
 
 var hudFont : Font;
 
@@ -33,7 +33,7 @@ var level     : int = 0;
 function Start () {
 	sprite = GetComponent(SpriteRenderer);
 	resetTimer (TIMEDEFAULT);
-	audio.volume = 0.8;
+	audio.volume = 0.2;
 }
 
 function resetTimer (time: int){
@@ -41,12 +41,14 @@ function resetTimer (time: int){
 	while(timer_reset_value){
 		timer_reset_value--;
 		timer = timer_reset_value;
+		if(timer <= 5){
+			audio.PlayOneShot(eFX_CountDown);
+		}
 		yield WaitForSeconds(1);
 	}
 }
 
 function speedUp (time : int) {
-
 	if(timer_Delay<=0){
 		while(time){
 			time--;
@@ -54,7 +56,6 @@ function speedUp (time : int) {
 			yield WaitForSeconds(1);
 		}
 	}
-	
 }
 
 function spawn(){
@@ -92,7 +93,7 @@ function Update () {
 	}
 	
 	if(timer < 5){
-	
+		
 		hud_Timer.guiText.fontSize = 40;
 		
 	}else if (timer > 5){

@@ -18,7 +18,6 @@ function spawn (position, speed) {
 }
 
 function popBubble(x, y){
-	audio.volume = 0.5;
 	audio.Play();
 	isSaved = true;
 	sprite.sprite = Sprite_fish;
